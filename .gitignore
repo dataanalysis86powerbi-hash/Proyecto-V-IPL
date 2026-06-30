@@ -1,0 +1,27 @@
+# Entorno Virtual de Python
+.venv/
+venv/
+ENV/
+env/
+
+# Caché de Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Base de Datos Vectorial de ChromaDB (Local y Dinámica)
+chroma_db/
+
+# Documentos subidos por el usuario para pruebas (Evita subir datos privados)
+uploaded_docs/
+
+# Archivos de configuración de editores / IDEs
+.vscode/
+.idea/
+
+# Archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
+Desktop.ini
+~$*.docx

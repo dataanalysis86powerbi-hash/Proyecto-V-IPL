@@ -1,0 +1,178 @@
+================================================================================
+GUÍA DE DESARROLLO Y RESUMEN PARA CONTINUAR MAÑANA
+PROYECTO: ASISTENTE DOCUMENTAL INTELIGENTE (RAG LOCAL)
+================================================================================
+
+Este archivo contiene toda la información necesaria para retomar el proyecto
+mañana, la estructura del desarrollo paso a paso y las referencias bibliográficas
+en formato APA Séptima Edición (APA 7th) necesarias para tu informe escrito de la
+universidad.
+
+================================================================================
+🌅 CÓMO CONTINUAR MAÑANA (INSTRUCCIONES DE EJECUCIÓN)
+================================================================================
+
+Cuando vayas a retomar el trabajo, sigue estos sencillos pasos:
+
+Paso 1: Abre una terminal de PowerShell en la carpeta del proyecto:
+        "C:\Users\ADMIN\Desktop\Proyecto V IPL FINAL"
+
+Paso 2: Asegúrate de que el servidor de Ollama esté ejecutándose:
+        - Puedes verificarlo abriendo la aplicación de escritorio de Ollama
+        - O bien ejecutando en tu consola:
+          > ollama serve
+
+Paso 3: Activa el entorno virtual de Python (.venv):
+        En la terminal de PowerShell, ejecuta:
+          > .\.venv\Scripts\Activate.ps1
+
+Paso 4: Levanta la aplicación web interactiva en Streamlit:
+        En la terminal de PowerShell, ejecuta:
+          > streamlit run app.py
+
+Paso 5: Abre el navegador de internet en la dirección:
+        👉 http://localhost:8501
+
+¡Y listo! Ya podrás cargar nuevos PDFs, chatear y comprobar las referencias
+de las fuentes en caliente.
+
+================================================================================
+📚 BIBLIOGRAFÍA EN FORMATO APA SÉPTIMA EDICIÓN (APA 7th)
+================================================================================
+Copia y pega estas referencias en la sección de bibliografía de tu trabajo escrito:
+
+1. Referencia para la técnica fundamental de RAG (Generación Aumentada por Recuperación):
+   Lewis, P., Perez, E., Piktus, A., Petroni, F., Lewis, P., Riedel, S., & Kiela, D. 
+       (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. 
+       *Advances in Neural Information Processing Systems*, 33, 9459–9474. 
+       https://arxiv.org/abs/1908.10084
+
+2. Referencia para la biblioteca de orquestación LangChain:
+   LangChain. (2023). *LangChain: Building applications with LLMs through composability* 
+       (Versión 0.2) [Software de computación]. 
+       https://github.com/langchain-ai/langchain
+
+3. Referencia para la base de datos vectorial ChromaDB:
+   Chroma. (2023). *Chroma: The AI-native open-source embedding database* 
+       (Versión 0.5) [Software de computación]. 
+       https://github.com/chroma-core/chroma
+
+4. Referencia para la interfaz gráfica Streamlit:
+   Streamlit Inc. (2020). *Streamlit: The fastest way to build and share data apps* 
+       (Versión 1.35) [Software de computación]. 
+       https://streamlit.io
+
+5. Referencia para el motor de inferencia local Ollama:
+   Ollama. (2024). *Ollama: Run Llama 3, Mistral, and other large language models locally* 
+       (Versión 0.3) [Software de computación]. 
+       https://ollama.com
+
+6. Referencia para el modelo LLM Llama 3.2:
+   Meta AI. (2024). *Llama 3.2: Open-source lightweight large language model* 
+       [Modelo de lenguaje de gran escala]. Meta. 
+       https://llama.meta.com
+
+7. Referencia para el modelo de embeddings all-MiniLM-L6-v2 (Sentence-Transformers):
+   Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence embeddings using Siamese 
+       BERT-networks. En *Proceedings of the 2019 Conference on Empirical Methods in 
+       Natural Language Processing*. Association for Computational Linguistics. 
+       https://doi.org/10.18653/v1/D19-1410
+
+--------------------------------------------------------------------------------
+💡 EJEMPLOS DE CITAS EN EL TEXTO (Cómo citarlas en tus párrafos):
+- "Para la división y estructuración lógica del texto del PDF, se implementó el 
+  orquestador de código abierto LangChain (LangChain, 2023)..."
+- "La base de datos elegida para la persistencia física de vectores semánticos 
+  fue Chroma (Chroma, 2023), debido a su ligereza técnica y velocidad de consulta..."
+- "Los fragmentos recuperados son procesados de manera offline a través de la 
+  inferencia del modelo de lenguaje Llama 3.2 (Meta AI, 2024), gestionado 
+  localmente por Ollama (Ollama, 2024)..."
+
+================================================================================
+🛠️ RESUMEN DEL DESARROLLO DEL PROYECTO PASO A PASO (SESIONES 1 A 8)
+================================================================================
+
+1. CONFIGURACIÓN DEL ENTORNO Y REQUISITOS (Sesión 1)
+   Se creó un entorno virtual aislado (.venv) en el directorio del proyecto para
+   evitar conflictos de dependencias con otros proyectos del sistema. 
+   El archivo "requirements.txt" contiene todas las librerías necesarias con sus
+   versiones estables instaladas (streamlit, langchain, langchain-community, 
+   langchain-ollama, langchain-huggingface, chromadb, pypdf, sentence-transformers).
+
+2. INGESTA Y PROCESAMIENTO DE PDF (Sesión 1)
+   Implementado en "ingestion.py":
+   - Utiliza la clase "PyPDFLoader" para abrir y leer los archivos PDF estructurados.
+   - Extrae el texto completo de cada página, conservando la información de 
+     metadatos como el número de página. Esto nos permite referenciar exactamente de 
+     qué parte del documento proviene cada respuesta del asistente.
+
+3. ESTRATEGIA AVANZADA DE CHUNKING (FRAGMENTACIÓN) (Sesión 2)
+   Implementado en "ingestion.py":
+   - Los modelos de lenguaje locales (LLMs) tienen limitaciones en su ventana de 
+     contexto. Para resolver esto, dividimos el texto del PDF en fragmentos pequeños.
+   - Usamos "RecursiveCharacterTextSplitter", un divisor avanzado que fragmenta por
+     párrafos, líneas y palabras completas recursivamente para no romper el flujo
+     semántico ni cortar oraciones o ideas a la mitad.
+   - Los parámetros "chunk_size" (tamaño del bloque) y "chunk_overlap" (zona de 
+     solapamiento o coincidencia entre bloques adyacentes) se pueden calibrar desde
+     el panel de usuario en la aplicación web.
+
+4. EMBEDDINGS SEMÁNTICOS LOCALES (Sesión 3)
+   Implementado en "ingestion.py":
+   - La búsqueda tradicional busca palabras exactas. Para buscar por el significado
+     de la pregunta, transformamos cada fragmento de texto en vectores numéricos densos.
+   - Usamos el modelo open-source "all-MiniLM-L6-v2" mediante "HuggingFaceEmbeddings".
+   - Este paso se ejecuta 100% en local y de manera gratuita en el procesador del usuario.
+
+5. BASE DE DATOS VECTORIAL E INDEXACIÓN PERSISTENTE (Sesión 4)
+   Implementado en "ingestion.py":
+   - Los vectores generados y el texto del documento se guardan e indexan en 
+     "ChromaDB", una base de datos vectorial local.
+   - Se configura la persistencia física en el disco ("chroma_db/"). Esto asegura 
+     que no sea necesario re-procesar o volver a cargar el PDF cada vez que se inicie 
+     la aplicación web, logrando respuestas rápidas y eficientes.
+
+6. ORQUESTACIÓN DE LA CADENA RAG (Sesión 5)
+   Implementado en "rag_chain.py":
+   - Conecta el "Retriever" (recuperador de ChromaDB) con el modelo LLM "llama3.2:latest"
+     ejecutándose en Ollama local.
+   - Cuando el usuario hace una pregunta, ChromaDB recupera los "k" fragmentos más
+     similares y los inyecta en el flujo lógico que se envía al modelo generativo.
+
+7. INGENIERÍA DE PROMPTS Y MITIGACIÓN DE ALUCINACIONES (Sesión 6)
+   Implementado en "rag_chain.py" (Criterio crítico de evaluación: 30%):
+   - Creamos una plantilla estricta ("ChatPromptTemplate") donde le ordenamos al LLM
+     limitarse EXCLUSIVAMENTE a la información que le proporcionamos en el contexto.
+   - Si la respuesta a la pregunta del usuario no está explícitamente escrita en los
+     fragmentos recuperados del PDF, el modelo tiene instrucciones estrictas de 
+     responder exactamente: "Lo siento, pero la información solicitada no se encuentra 
+     en los documentos indexados." Esto previene cualquier alucinación en entornos 
+     académicos e industriales.
+
+8. INTERFAZ WEB DE USUARIO Y GESTIÓN DE HISTORIAL (Sesión 7)
+   Implementado en "app.py":
+   - Una interfaz web interactiva premium con Streamlit que corre en el navegador.
+   - Cuenta con un panel lateral para subir PDFs en caliente, barra de calibración de
+     hiperparámetros, selector de modelos y un botón para purgar la base de datos.
+   - Cuenta con una ventana de chat elegante y limpia que almacena el historial de
+     la conversación.
+   - Para verificar el correcto funcionamiento del recuperador, cada respuesta del
+     asistente muestra un menú desplegable con el texto exacto recuperado de las 
+     fuentes y el número de página de donde se extrajo.
+
+9. EVALUACIÓN Y MANUAL DE INSTALACIÓN (Sesión 8)
+   Implementado en "README.md":
+   - Documentación completa que explica cómo levantar el servidor Ollama, activar el
+     entorno virtual, instalar dependencias y levantar la aplicación. Cumple con el 
+     10% de la nota de Calidad y Documentación de Software.
+
+================================================================================
+ESTRUCTURA DE ARCHIVOS CREADOS EN TU CARPETA:
+================================================================================
+- C:\Users\ADMIN\Desktop\Proyecto V IPL FINAL\requirements.txt
+- C:\Users\ADMIN\Desktop\Proyecto V IPL FINAL\ingestion.py
+- C:\Users\ADMIN\Desktop\Proyecto V IPL FINAL\rag_chain.py
+- C:\Users\ADMIN\Desktop\Proyecto V IPL FINAL\app.py
+- C:\Users\ADMIN\Desktop\Proyecto V IPL FINAL\README.md
+- C:\Users\ADMIN\Desktop\Proyecto V IPL FINAL\Explicacion_Proyecto.txt (Este archivo)
+================================================================================
